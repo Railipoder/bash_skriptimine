@@ -1,0 +1,26 @@
+#!/bin/bash
+#
+#See skript loob kasutaja käsurealiste parameetrite abil
+#kasutaja luukase ilma paroolita
+#kasutajale lisatakse kodukataloog
+#kodukataloogis tekib vajalik struktuur peidetud failidest
+if [ $# -ne 1 ]; then
+    echo "Kasutusjuhend: $0 failinimi"
+else
+ 
+  if [ -f $failinimi -a -r $failinimi ]; then
+# -f sisestatakse, kuna see kontrollib, kas fail eksisteerib
+#  -r käsk loeb failist sisu
+    echo "fail on korras"
+    for nimi in $(cat $failinimi)
+    do
+      # sellega peaks faili sisu olema nähtav, kui fail on kätte saadav ja nüüd echo asemel tuleb kutsuda vajalik skript
+      # echo $nimi #kuvab nime, kellele hakatakse kasutajat looma
+     sh lisa_kasutaja $nimi # aktiveeritakse selle skrpiti abil teise skrpiti töö
+    done
+  else
+    echo "probleem failiga $failinimi"
+  fi
+fi
+
+
