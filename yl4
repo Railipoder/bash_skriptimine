@@ -1,0 +1,28 @@
+#!/bin/bash
+# See on skript, mis kasutab parameetrina kahte faili
+# Ühes failis on kasutajad ja teises antud kasutajate paroolid. 
+# Skript peab lisama kasutajatele vastavad paroolid
+#
+if [ $# -ne 2 ];then  # 2 on parameetrite arv
+        echo " Kasutusjuhend: $0 kasutajad paroolid"
+else
+        kasutajad=$1
+        paroolid=$2
+        paste -d":" $kasutajad $paroolid > kasutajad_pass.txt
+        if [ -f $kasutajad -a -r $kasutajad ] && [ -f $paroolid -a -r paroolid ]; then
+        # kontrollimine, kas antud failid on olemas
+                    echo "Faiidega on kõik korras"
+                    for kas in $(cat $kasutajad); do #luuakse kasutajad
+                    useradd $kas -m -s /bin/bash
+                    echo "Kasutajad $kas on loodud"
+                    more /etc/shadow | grep "$kas" # Näitab loodud kasutajat
+                    done
+                    for pas in $(cat kasutajad_pass.txt); do
+                    echo $pas | chpasswd
+                    kas2=$(echo $pas | cut -fi -d":")
+                    more /etc/shadow | grep "$kas"
+                    done
+        else
+                    echo "failid on vigased"
+        fi
+fi
