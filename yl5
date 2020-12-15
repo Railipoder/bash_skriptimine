@@ -1,0 +1,22 @@
+#!/bin/bash
+# See skript kasutab parameetrina faili, milles on kasutajad
+# Iga rida vastab ühele sissekandele kasutaja kohta
+#
+if [ $# -ne 1 ]; then
+    echo "Kasutusjuhend: $0 kasutajad"
+else
+    kasutajad=$1
+  if [ -f $kasutajad -a -r $kasutajad ]; then
+    echo "fail on korras"
+    for kas in $(cat $kasutajad); do
+    useradd $kas -m -s /bin/bash
+    echo "Kasutaja $kas on lisatud"
+    done
+    for rida in $(cat $1); do
+    pwgen -1  >> passwdgen.txt  #Sinna faili lisab paroolid
+    paste -d ":" $kasutajad passwdgen.txt > userpasswd.txt #Saadab sinna faili kasutajanimi:parool
+    done
+  else
+    echo "probleem failiga $kasutajad"
+  fi
+fi
